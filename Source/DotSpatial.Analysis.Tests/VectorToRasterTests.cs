@@ -18,79 +18,82 @@ namespace DotSpatial.Analysis.Tests
     {
 
 
-        [Test]
-        public void SamePolygonDifferentCellsTest()
-        {
-            #region shared settings
-            var cellSize = 25.00D;
-            var columnName = "DataValue";
-            var coordinateList_polygon_1 = GetCoordinateList_1();
-            var coordinateList_polygon_2 = GetCoordinateList_2();
-            var value1 = 1;
-            #endregion
+        //[Test]
+        //public void SamePolygonDifferentCellsTest()
+        //{
+        //    #region shared settings
+        //    var cellSize = 25.00D;
+        //    var columnName = "DataValue";
+        //    var coordinateList_polygon_1 = GetCoordinateList_1();
+        //    var coordinateList_polygon_2 = GetCoordinateList_2();
+        //    var value1 = 1;
+        //    #endregion
 
-            #region raster 1
-            var raster1FileName = @"c:\temp\raster1.bgd";
-            var featureSet1FileName = @"c:\temp\raster1.shp";
-            var featureSet1 = new FeatureSet(FeatureType.Polygon);
-            featureSet1.DataTable.Columns.Add(new DataColumn(columnName, typeof(int)));
-            featureSet1.Projection = KnownCoordinateSystems.Projected.NationalGridsSweden.RT9025gonV;
-            IFeature feature = new Feature(FeatureType.Polygon, coordinateList_polygon_1);
+        //    #region raster 1
+        //    var raster1FileName = @"c:\temp\raster1.bgd";
+        //    var featureSet1FileName = @"c:\temp\raster1.shp";
+        //    var featureSet1 = new FeatureSet(FeatureType.Polygon);
+        //    featureSet1.DataTable.Columns.Add(new DataColumn(columnName, typeof(int)));
+        //    featureSet1.Projection = KnownCoordinateSystems.Projected.NationalGridsSweden.RT9025gonV;
+        //    IFeature feature = new Feature(FeatureType.Polygon, coordinateList_polygon_1);
 
-            featureSet1.Features.Add(feature);
+        //    featureSet1.Features.Add(feature);
 
-            feature.DataRow[columnName] = value1;
+        //    feature.DataRow[columnName] = value1;
 
-            var raster1 = VectorToRaster.ToRaster(featureSet1, cellSize, columnName, raster1FileName);
-            if (!raster1.IsInRam)
-                raster1.GetStatistics();
+        //    var raster1 = VectorToRaster.ToRaster(featureSet1, cellSize, columnName, raster1FileName);
+        //    if (!raster1.IsInRam)
+        //        raster1.GetStatistics();
 
-            raster1.Projection = featureSet1.Projection;
-            raster1.Save();
+        //    raster1.Projection = featureSet1.Projection;
+        //    raster1.Save();
 
-            featureSet1.SaveAs(featureSet1FileName, true);
+        //    featureSet1.SaveAs(featureSet1FileName, true);
 
 
-            var raster1Clipper = new RasterClipper(raster1);
+        //    var raster1Clipper = new RasterClipper(raster1);
 
-            var raster1Cells = raster1Clipper.GetCellsWithValue(value1);
+        //    var raster1Cells = raster1Clipper.GetCellsWithValue(value1);
 
-            #endregion
+        //    #endregion
 
-            #region raster 2
-            var raster2FileName = @"c:\temp\raster2.bgd";
-            var featureSet2FileName = @"c:\temp\raster2.shp";
-            var featureSet2 = new FeatureSet(FeatureType.Polygon);
-            featureSet2.DataTable.Columns.Add(new DataColumn(columnName, typeof(int)));
-            featureSet2.Projection = KnownCoordinateSystems.Projected.NationalGridsSweden.RT9025gonV;
-            IFeature f1 = new Feature(FeatureType.Polygon, coordinateList_polygon_1);
-            IFeature f2 = new Feature(FeatureType.Polygon, coordinateList_polygon_2);
+        //    #region raster 2
+        //    var raster2FileName = @"c:\temp\raster2.bgd";
+        //    var featureSet2FileName = @"c:\temp\raster2.shp";
+        //    var featureSet2 = new FeatureSet(FeatureType.Polygon);
+        //    featureSet2.DataTable.Columns.Add(new DataColumn(columnName, typeof(int)));
+        //    featureSet2.Projection = KnownCoordinateSystems.Projected.NationalGridsSweden.RT9025gonV;
+        //    IFeature f1 = new Feature(FeatureType.Polygon, coordinateList_polygon_1);
+        //    IFeature f2 = new Feature(FeatureType.Polygon, coordinateList_polygon_2);
 
-            featureSet2.Features.Add(f1);
-            featureSet2.Features.Add(f2);
+        //    featureSet2.Features.Add(f1);
+        //    featureSet2.Features.Add(f2);
 
-            f1.DataRow[columnName] = value1;
-            f2.DataRow[columnName] = 2;
+        //    f1.DataRow[columnName] = value1;
+        //    f2.DataRow[columnName] = 2;
 
-            var raster2 = VectorToRaster.ToRaster(featureSet2, cellSize, columnName, raster2FileName);
-            if (!raster2.IsInRam)
-                raster2.GetStatistics();
+        //    var raster2 = VectorToRaster.ToRaster(featureSet2, cellSize, columnName, raster2FileName);
+        //    if (!raster2.IsInRam)
+        //        raster2.GetStatistics();
 
-            raster2.Projection = featureSet2.Projection;
-            raster2.Save();
+        //    raster2.Projection = featureSet2.Projection;
+        //    raster2.Save();
 
-            featureSet2.SaveAs(featureSet2FileName, true);
+        //    featureSet2.SaveAs(featureSet2FileName, true);
                
 
-            var raster2Clipper = new RasterClipper(raster2);
+        //    var raster2Clipper = new RasterClipper(raster2);
 
-            var raster2Cells = raster2Clipper.GetCellsWithValue(value1);
-            #endregion
+        //    var raster2Cells = raster2Clipper.GetCellsWithValue(value1);
+        //    #endregion
 
-            Assert.AreEqual(raster1Cells.Count, raster2Cells.Count);
+        //    //This does not have to be true.. if cell [0,0] start at a different place 
+        //    //the number of cells assigned to a polygon can be different
+            
+        //    Assert.AreEqual(raster1Cells.Count, raster2Cells.Count);
 
            
-        }
+        //}
 
 
 
